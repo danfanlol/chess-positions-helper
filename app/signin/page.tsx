@@ -12,7 +12,9 @@ const router = useRouter();
   const handleHomeRedirect = () => {
     router.push("/"); // Navigate to the Sign In page
   };
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: any) => {
+    const formData = new FormData(e.target); // Extract form data
+    console.log(formData);
     e.preventDefault();
 
     const res = await fetch("/api/auth/login", {
@@ -21,12 +23,11 @@ const router = useRouter();
       body: JSON.stringify({ username, password }),
     });
 
-    const data = await res.json();
 
     if (res.ok) {
       router.push("/loggedin");  // Redirect to protected page on successful login
     } else {
-      setError(data.message);
+      setError("RETARD!");
     }
   };
   return (
@@ -36,12 +37,14 @@ const router = useRouter();
       <div>
       <form onSubmit={handleLogin}>
         <input
+          name = "Username"
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
+          name = "Password"
           type="password"
           placeholder="Password"
           value={password}
