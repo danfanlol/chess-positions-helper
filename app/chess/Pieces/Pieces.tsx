@@ -39,13 +39,14 @@ export default function Home({setAnimated, square}:{setAnimated: any, square: st
     }, []);
 
     
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     const trace = (x:number, y:number) => {
         let lastX = x; 
         let lastY = y;
         let i = 0; //in an earlier version, this was -1, and right after the next line, it was incremented. This not only didn't work because of some of the reasons mentioned below, but also because 
         //the path list didn't even have the first position of the knight, so I was effectively skipping a step; the knight appeared to be teleporting to random places on the UI. 
-        const intervalId = setInterval(() => {
+        const intervalId = setInterval(async () => {
 
             setPosition((prevPosition) => { //not realizing this ran multiple times, along with the fact that it ran AFTER all the code below ran (due to asyncronous nature) cost me 
                 //another hour or so of debugging, coupled with the other css issue in which I didn't know where the errors were, and which errors were causing which bug
@@ -65,10 +66,10 @@ export default function Home({setAnimated, square}:{setAnimated: any, square: st
             
             if (i == 63){
                 clearInterval(intervalId);
+                await delay(200); // Pause for 200ms    
                 setAnimated(false);
             }
-            
-        }, 100);
+        }, 700);
     }
     const knightMoves = [
         { x: 2, y: 1 },

@@ -54,7 +54,7 @@ export default function Home() {
                 </div>
             </div>
             <div>
-                <h1 className = "text-2xl font-bold text-center"> This is what you have clicked {clickedSquare} </h1>
+                {(!animated && clickedSquare != null) ? <h1 className = "text-2xl font-bold text-center"> Click on the Board to Reset </h1> : !animated ? <h1 className = "text-2xl font-bold text-center"> Click on a Square to Begin </h1> : <h1 className = "text-2xl font-bold text-center"> Enjoy! </h1>}
             </div>
         </div>
     )
