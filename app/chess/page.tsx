@@ -10,20 +10,26 @@ export default function Home() {
     for (let i = 0; i < horizontal.length;i++){
         for (let j =vertical.length-1 ; j >= 0;j--){
             if ((j+i+2) % 2 == 0){
-                board.push(<div className = "w-[100px] h-[100px] bg-[#B48764]" key={`${horizontal[i]}${vertical[j]}`}>  </div>)
+                board.push(<div className = "w-[80px] h-[80px] bg-[#B48764]" key={`${horizontal[i]}${vertical[j]}`}>  </div>)
 
             }
             else{
-                board.push(<div className = "w-[100px] h-[100px] bg-[#F0D8B7]" key={`${horizontal[i]}${vertical[j]}`}> </div>)
+                board.push(<div className = "w-[80px] h-[80px] bg-[#F0D8B7]" key={`${horizontal[i]}${vertical[j]}`}> </div>)
             }
         }
     }
     return (
-        <div className = "grid place-content-center h-[100vh]">
-            <div className = "relative w-[800px] h-[800px] grid grid-cols-[repeat(8,100px)] grid-rows-[repeat(8,100px)]">
-                {board} 
-                <Pieces/>
+        <div>
+            <div className = "grid place-content-center h-[80vh]">
+                <div className = "relative w-[640px] h-[640px] grid grid-cols-[repeat(8,80px)] grid-rows-[repeat(8,80px)]">
+                    {board} 
+                    <Pieces/>
+                </div>
+            </div>
+            <div>
+                <h1 className = "text-2xl font-bold text-center"> This is what you have clicked </h1>
             </div>
         </div>
+
     )
 }
