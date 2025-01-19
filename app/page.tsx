@@ -1,39 +1,69 @@
-'use client'
-import {useRouter} from "next/navigation"
-import {useState, useEffect} from "react"
+"use client"
 
+import { useState } from "react";
+import {useRouter } from "next/navigation";
+import Pieces from "./Pieces/Pieces";
+
+const vertical = [1,2,3,4,5,6,7,8]
+const horizontal = ["a","b","c","d","e","f","g","h"]
 export default function Home() {
-  const router = useRouter();
-  const handleSignInRedirect = () => {
-    router.push("/signin"); // Navigate to the Sign In page
-  };
-  
-  return (
-    <div>
-      <h1> Home Page</h1>
-      <button className = 'border-2' onClick={handleSignInRedirect}> Sign in Page </button>
-      <h1> This is the key </h1>
-      <main className = "mb-10 flex flex-col items-center">
-        <h1 className = "text-5xl font-bold m-10"> Add Data to Firestore Database </h1>
-        <form className = "bg-gray-300 p-4 shadow-md rounded-lg">
-          <div className = "mb-4">
-            <label className = "block text-gray-700 font-bold mb-2"> Name: </label>
-            <input className = "w-full px-3 py-2 rounded-lg focus:outline-none border focus:border-blue-500"/>
-          </div>
-          <div className = "mb-4">
-            <label className = "block text-gray-700 font-bold mb-2"> Email: </label>
-            <input className = "w-full px-3 py-2 rounded-lg focus:outline-none border focus:border-blue-500"/>
-          </div>
-          <div className = "mb-4">
-            <label className = "block text-gray-700 font-bold mb-2"> Message </label>
-            <textarea className = "w-full px-3 py-2 rounded-lg focus:outline-none border ">
-            </textarea>
-          </div>
-          <div className = "text-center">
-            <button className = "font-bold px-2 py-2 bg-gray-400 rounded-lg"> Submit </button>
-          </div>
-        </form>
-      </main>
-    </div>
-  );
+    const router = useRouter();
+    const [clickedSquare, setClickedSquare] = useState<string | null>(null);
+    const [animated, setAnimated] = useState<boolean | null>(false);
+
+    
+    const handleClick = (event: React.MouseEvent) => {
+        if (!animated && clickedSquare != null){
+            setClickedSquare(null);
+        }
+        else if (!animated){
+            const boardRect = event.currentTarget.getBoundingClientRect(); // Get board boundaries
+            const x = event.clientX - boardRect.left; // Get the x coordinate of the click relative to the board
+            const y = event.clientY - boardRect.top; // Get the y coordinate of the click relative to the board
+    
+            const row = Math.floor(y / 80); // Determine row based on y coordinate
+            const col = Math.floor(x / 80); // Determine column based on x coordinate
+            if (row >= 0 && row < 8 && col >= 0 && col < 8) {
+                setClickedSquare(`${String.fromCharCode(97 + col)}${8 -row }`); // Convert column index to letter
+                setAnimated(true);
+              }
+            // console.log("ASD")
+        }
+
+    }
+    let board = [];
+
+    for (let i = 0; i < horizontal.length;i++){
+        for (let j =vertical.length-1 ; j >= 0;j--){
+            if ((j+i+2) % 2 == 0){
+                board.push(<div className = "w-[80px] h-[80px] bg-[#B48764]" key={`${horizontal[i]}${vertical[j]}`}>  </div>)
+
+            }
+            else{
+                board.push(<div className = "w-[80px] h-[80px] bg-[#F0D8B7]" key={`${horizontal[i]}${vertical[j]}`}> </div>)
+            }
+        }
+    }
+    const onClick = (e:any) =>{
+        router.push("/FAQ")
+    }
+    return (
+        <div className="bg-gradient-to-r from-gray-400 via-gray-600 to-gray-700 h-[100vh] pt-10">
+            <div>
+                <h1 className = "text-5xl font-bold text-center"> Schedule A Knight's Tour! </h1>
+            </div>
+            <div className = "grid place-content-center h-[80vh]">
+                <div onClick = {handleClick} className = "relative w-[640px] h-[640px] grid grid-cols-[repeat(8,80px)] grid-rows-[repeat(8,80px)]">
+                    {board} 
+                    {clickedSquare ? <Pieces setAnimated={setAnimated} square = {clickedSquare}/> : null}
+                </div>
+            </div>
+            <div>
+                {(!animated && clickedSquare != null) ? <h1 className = "text-2xl font-bold text-center"> Click on the Board to Reset </h1> : !animated ? <h1 className = "text-2xl font-bold text-center"> Click on a Square to Begin </h1> : <h1 className = "text-2xl font-bold text-center"> Enjoy! </h1>}
+            </div>
+            <div onClick = {onClick} className = "cursor-pointer absolute top-[2rem] left-[95rem] bg-[#333] py-5 px-10 rounded-2xl text-2xl">
+                <button>FAQ </button>
+            </div>
+        </div>
+    )
 }
